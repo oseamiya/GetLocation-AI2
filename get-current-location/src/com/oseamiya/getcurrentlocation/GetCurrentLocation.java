@@ -22,6 +22,16 @@ public class GetCurrentLocation extends AndroidNonvisibleComponent {
     this.activity = (Activity) container.$context();
     this.locationInformation = new LocationInformation(container.$context());
   }
+  @SimpleFunction(description ="To check if Location Services is enabled or not")
+  public boolean IsLocationServicesEnabled() {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+      return locationManager.isLocationEnabled();
+    } else {
+      int mode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
+      return mode == Settings.Secure.LOCATION_MODE_OFF ? false : true;
+    }
+  }
   @SimpleFunction
   public void AskRequiredPermissions() {
     if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
